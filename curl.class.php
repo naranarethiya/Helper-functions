@@ -8,7 +8,7 @@ class mycurl {
     protected $_cookieFileLocation = './cookie.txt'; 
     protected $_post; 
     protected $_postFields; 
-    protected $_referer ="http://www.google.com"; 
+    protected $_referer =""; 
 
     protected $_session; 
     protected $_webpage; 
@@ -125,7 +125,7 @@ class mycurl {
 }
 
 
-$url="https://www.google.co.in";
+$url="http://shortmsg.net";
 $curl= new mycurl($url);
 $curl->createCurl();
 echo $curl->__tostring();
