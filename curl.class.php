@@ -13,9 +13,11 @@ class mycurl {
     protected $_session; 
     protected $_webpage; 
     protected $_includeHeader; 
+    protected $_httpHeader;
     protected $_noBody; 
     protected $_status; 
-    protected $_binaryTransfer; 
+    protected $_binaryTransfer;
+
     protected $_freshConnect=true; 
     public    $authentication = 0; 
     public    $auth_name      = ''; 
@@ -29,6 +31,7 @@ class mycurl {
         $this->_noBody = $noBody; 
         $this->_includeHeader = $includeHeader; 
         $this->_binaryTransfer = $binaryTransfer; 
+        $this->_httpHeader = array(); 
 
         $this->_cookieFileLocation = dirname(__FILE__).'/cookie.txt'; 
 
@@ -56,6 +59,10 @@ class mycurl {
         $this->_cookieFileLocation = $path; 
     } 
 
+    public function setHttpHeader($header) {
+        $this->_httpHeader[]=$header;
+    }
+
     public function setPost ($postFields)  { 
         $this->_post = true; 
         $this->_postFields = $postFields; 
@@ -72,8 +79,7 @@ class mycurl {
 
         $s = curl_init(); 
 
-        curl_setopt($s,CURLOPT_URL,$this->_url); 
-        curl_setopt($s,CURLOPT_HTTPHEADER,array('Expect:')); 
+        curl_setopt($s,CURLOPT_URL,$this->_url);
         curl_setopt($s,CURLOPT_TIMEOUT,$this->_timeout); 
         curl_setopt($s,CURLOPT_MAXREDIRS,$this->_maxRedirects); 
         curl_setopt($s,CURLOPT_RETURNTRANSFER,true); 
@@ -81,14 +87,17 @@ class mycurl {
         curl_setopt($s,CURLOPT_COOKIEJAR,$this->_cookieFileLocation); 
         curl_setopt($s,CURLOPT_COOKIEFILE,$this->_cookieFileLocation); 
 
+        if(count($this->_httpHeader) > 0) {
+            curl_setopt($s,CURLOPT_HTTPHEADER,$this->_httpHeader); 
+        }
+
         if($this->authentication == 1) { 
             curl_setopt($s, CURLOPT_USERPWD, $this->auth_name.':'.$this->auth_pass); 
         } 
 
         if($this->_post) { 
             curl_setopt($s,CURLOPT_POST,true); 
-            curl_setopt($s,CURLOPT_POSTFIELDS,$this->_postFields); 
-
+            curl_setopt($s,CURLOPT_POSTFIELDS,$this->_postFields);
         } 
 
         if($this->_includeHeader) { 
@@ -113,7 +122,7 @@ class mycurl {
         $this->_status = curl_getinfo($s,CURLINFO_HTTP_CODE); 
         curl_close($s); 
 
-    } 
+    }
 
     public function getHttpStatus() { 
         return $this->_status; 
