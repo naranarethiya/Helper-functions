@@ -238,21 +238,18 @@ function datedifference($date1,$date2,$type='dd') {
 	$datetime1 = new DateTime($date1);
 	$datetime2 = new DateTime($date2);
 	$interval = $datetime2->diff($datetime1);
-	if($type='dd') {
-		return $interval->format('%a');
+	if($type=='dd') {
+		return str_replace('+','',$interval->format('%R%a'));
 	}
-	elseif($type='mm') {
-		return $interval->format('%m');
+	elseif($type=='mm') {
+		return str_replace('+','',$interval->format('%R%m'));
 	}
-	elseif($type='yr') {
-		return $interval->format('%y');
+	elseif($type=='yr') {
+		return str_replace('+','',$interval->format('%R%y'));
 	}
-	elseif($type='hr') {
-		return $interval->format('%h');
+	elseif($type=='hr') {
+		return str_replace('+','',$interval->format('%R%h'));
 	}
-	elseif($type='min') {
-		return $interval->format('%i');
-	}		
 }
 
 /* 
